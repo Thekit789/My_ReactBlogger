@@ -2,7 +2,7 @@ import { Linkedin, Github, Mail } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-[#EFEEEB] h-36 w max-w-full flex flex-row justify-between items-center px-32 py-16">
+    <footer className="flex flex-col px-4 py-8 h-36 justify-between items-center md:max-w-full md:flex-row md:py-16 bg-[#EFEEEB] ">
       <div className="flex space-x-4 justify-between">
         <span className="text-base font-medium">Get in touch</span>
         <div className="flex space-x-4">
