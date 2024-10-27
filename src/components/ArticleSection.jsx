@@ -1,6 +1,13 @@
 import React from "react";
 import { Search, ChevronDown } from "lucide-react";
 import { blogPosts } from "@/data/blogPosts";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function ArticleSection() {
   const categories = ["Highlight", "Cat", "Inspiration", "General"];
@@ -29,13 +36,20 @@ export function ArticleSection() {
               className="min-w-full h-12 rounded-xl pr-3 pl-4 py-3 border text-base font-medium text-[#75716B]"
             />
           </div>
-          <menu className="pt-4 md:hidden">
-            <h1 className="text-base font-medium text-[#75716B]">Category</h1>
-            <div className="relative">
-              <ChevronDown className="md:hidden absolute top-1/4 right-4 text-[#b3afa8]" />
-              <button className="flex items-center min-w-full h-12 rounded-xl pr-3 pl-4 py-3 border text-base text-start font-medium text-[#afaead] bg-white">
-                Highlight
-              </button>
+          <menu className="pt-4 w-full md:hidden">
+            <div className="flex flex-col items-center justify-center rounded-xl h-12 bg-white">
+              <Select defaultValue="Highlight">
+                <SelectTrigger className="rounded-xl h-12 text-[#75716B]">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent className="bg-white rounded-xl">
+                  {categories.map((category, index) => (
+                    <SelectItem key={index} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </menu>
         </div>
