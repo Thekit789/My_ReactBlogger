@@ -8,9 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 
 export function ArticleSection() {
   const categories = ["Highlight", "Cat", "Inspiration", "General"];
+  const [category, setCategory] = useState("Highlight");
   return (
     <>
       <article className="w-max-full h-auto flex flex-col justify-around">
@@ -19,12 +21,15 @@ export function ArticleSection() {
         </h1>
         <div className="md:flex justify-between items-center md:rounded-2xl h-auto w-full p-4 bg-[#EFEEEB] ">
           <menu className="hidden md:h-12 md:flex justify-around items-center">
-            {categories.map((menu, index) => (
+            {categories.map((item) => (
               <button
-                className="px-3.5 py-3 mr-3 transition-colors duration-500 rounded-xl text-base font-medium text-[#43403B] hover:subpixel-antialiased hover:bg-slate-100"
-                key={index}
+                key={item}
+                onClick={() => setCategory(item)}
+                className={`px-3 mr-2 py-3 transition-colors duration-200 rounded-xl text-sm text-muted-foreground font-medium ${
+                  category === item ? "bg-[#DAD6D1]" : "hover:bg-[#F5F5F4]"
+                }`}
               >
-                {menu}
+                {item}
               </button>
             ))}
           </menu>
@@ -38,13 +43,20 @@ export function ArticleSection() {
           </div>
           <menu className="pt-4 w-full md:hidden">
             <div className="flex flex-col items-center justify-center rounded-xl h-12 bg-white">
-              <Select defaultValue="Highlight">
+              <Select
+                value={category}
+                onValueChange={(value) => setCategory(value)}
+              >
                 <SelectTrigger className="rounded-xl h-12 text-[#75716B]">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent className="bg-white rounded-xl">
                   {categories.map((category, index) => (
-                    <SelectItem key={index} value={category}>
+                    <SelectItem
+                      className="mb-1 bg-black hover:bg-black"
+                      key={index}
+                      value={category}
+                    >
                       {category}
                     </SelectItem>
                   ))}
