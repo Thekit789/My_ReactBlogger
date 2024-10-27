@@ -3,6 +3,7 @@ import { Search, ChevronDown } from "lucide-react";
 import { blogPosts } from "@/data/blogPosts";
 
 export function ArticleSection() {
+  const categories = ["Highlight", "Cat", "Inspiration", "General"];
   return (
     <>
       <article className="w-max-full h-auto flex flex-col justify-around">
@@ -11,18 +12,14 @@ export function ArticleSection() {
         </h1>
         <div className="md:flex justify-between items-center md:rounded-2xl h-auto w-full p-4 bg-[#EFEEEB] ">
           <menu className="hidden md:h-12 md:flex justify-around items-center">
-            <button className="px-3.5 py-3 mr-3 rounded-xl text-base font-medium text-[#43403B] bg-[#DAD6D1]">
-              Highlight
-            </button>
-            <button className="px-3.5 py-3 mr-3 rounded-xl text-base font-medium text-[#75716B] hover:bg-slate-100">
-              Cat
-            </button>
-            <button className="px-3.5 py-3 mr-3 rounded-xl text-base font-medium text-[#75716B]  hover:bg-slate-100">
-              Inspiration
-            </button>
-            <button className="px-3.5 py-3 mr-3 rounded-xl text-base font-medium text-[#75716B]  hover:bg-slate-100">
-              Ganeral
-            </button>
+            {categories.map((menu, index) => (
+              <button
+                className="px-3.5 py-3 mr-3 transition-colors duration-500 rounded-xl text-base font-medium text-[#43403B] hover:subpixel-antialiased hover:bg-slate-100"
+                key={index}
+              >
+                {menu}
+              </button>
+            ))}
           </menu>
           <div className="w-full md:max-w-[360px] relative">
             <Search className="absolute top-1/4 right-4 text-[#b3afa8]" />
