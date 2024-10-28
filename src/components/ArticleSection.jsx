@@ -52,11 +52,7 @@ export function ArticleSection() {
                 </SelectTrigger>
                 <SelectContent className="bg-white rounded-xl">
                   {categories.map((category, index) => (
-                    <SelectItem
-                      className="mb-1 bg-black hover:bg-black"
-                      key={index}
-                      value={category}
-                    >
+                    <SelectItem className="mb-1" key={index} value={category}>
                       {category}
                     </SelectItem>
                   ))}
