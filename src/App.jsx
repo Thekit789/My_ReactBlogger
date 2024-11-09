@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <NavBar />
-      <HeroSection />
+      {/* <HeroSection /> */}
       <ArticleSection />
       <div>
         <br />

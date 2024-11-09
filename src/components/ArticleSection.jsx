@@ -1,6 +1,5 @@
 import React from "react";
-import { Search, ChevronDown } from "lucide-react";
-import { blogPosts } from "@/data/blogPosts";
+import { Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -8,13 +7,71 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import loadingGif from "../assets/IMG/Loading.gif";
 
 export function ArticleSection() {
   const categories = ["Highlight", "Cat", "Inspiration", "General"];
   const [category, setCategory] = useState("Highlight");
+  const [isLoading, setIsLoading] = useState(true);
+  const [blogPostData, setblogPostData] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 6;
+  const [hasViewMore, setHasViewMore] = useState(true);
+
+  const fetchPosts = async (page, limit) => {
+    try {
+      const response = await axios.get(
+        `https://blog-post-project-api.vercel.app/posts?page=${page}&limit=${limit}`
+      );
+      if (page === 1) {
+        setblogPostData(response.data.posts);
+      } else {
+        setblogPostData((prevData) => [...prevData, ...response.data.posts]);
+      }
+      setIsLoading(false);
+
+      if (response.data.currentPage >= response.data.totalPages) {
+        setHasViewMore(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts(1, limit);
+  }, []);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchPosts(page, limit);
+    }
+  }, [page]);
+
+  const loading = () => {
+    return (
+      <div className="w-max-full flex flex-col items-center justify-center py-12">
+        <img
+          className="md:size-24 size-10"
+          src={loadingGif}
+          alt="Description of the image"
+        />
+        <h1 className="md:text-2xl text-base text-[#504F4D] pt-2">
+          Loading...
+        </h1>
+      </div>
+    );
+  };
+
+  const handleViewMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
   return (
     <>
+      {isLoading ? loading() : null}
       <article className="w-max-full h-auto flex flex-col justify-around">
         <h1 className="text-2xl font-semibold pb-4 text-[#26231E]">
           Latest articles
@@ -64,51 +121,60 @@ export function ArticleSection() {
       </article>
       <></>
       <article className="md:grid-cols-2 md:gap-6 grid grid-cols-1 gap-12 pt-6 pb-20 bg-slate-50">
-        {blogPosts.map((item) => (
-          <BlogCard key={item.id} item={item} />
-        ))}
+        {blogPostData.map((postData, id) => {
+          const formattedDate = new Date(postData.date).toLocaleDateString(
+            "en-GB",
+            { day: "2-digit", month: "long", year: "numeric" }
+          );
+          return (
+            <div className="flex flex-col gap-4" key={id}>
+              <a href="#" className="relative h-[212px] sm:h-[360px]">
+                <img
+                  className="w-full h-full object-cover rounded-xl"
+                  src={postData.image}
+                  alt={postData.title}
+                />
+              </a>
+              <div className="flex flex-col">
+                <div className="flex">
+                  <span className="bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-green-600 mb-2">
+                    {postData.category}
+                  </span>
+                </div>
+                <a href="#" className="no-underline">
+                  <h2 className="text-start font-bold text-xl mb-2 line-clamp-2 hover:underline text-[#26231E]">
+                    {postData.title}
+                  </h2>
+                </a>
+                <p className="text-muted-foreground text-sm mb-4 flex-grow line-clamp-3 text-[#74726F]">
+                  {postData.description}
+                </p>
+                <div className="flex items-center text-sm">
+                  <img
+                    className="w-8 h-8 rounded-full mr-2"
+                    src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg"
+                    alt="Tomson P."
+                  />
+                  <span>{postData.author}</span>
+                  <span className="mx-2 text-gray-300">|</span>
+                  <span className="text-[#74726F]">{formattedDate}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </article>
-    </>
-  );
-}
-
-function BlogCard({ item }) {
-  return (
-    <div>
-      <div className="flex flex-col gap-4">
-        <a href="#" className="relative h-[212px] sm:h-[360px]">
-          <img
-            className="w-full h-full object-cover rounded-xl"
-            src={item.image}
-            alt={item.title}
-          />
-        </a>
-        <div className="flex flex-col">
-          <div className="flex">
-            <span className="bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-green-600 mb-2">
-              {item.category}
-            </span>
-          </div>
-          <a href="#" className="no-underline">
-            <h2 className="text-start font-bold text-xl mb-2 line-clamp-2 hover:underline text-[#26231E]">
-              {item.title}
-            </h2>
-          </a>
-          <p className="text-muted-foreground text-sm mb-4 flex-grow line-clamp-3 text-[#74726F]">
-            {item.description}
-          </p>
-          <div className="flex items-center text-sm">
-            <img
-              className="w-8 h-8 rounded-full mr-2"
-              src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg"
-              alt="Tomson P."
-            />
-            <span>{item.author}</span>
-            <span className="mx-2 text-gray-300">|</span>
-            <span className="text-[#74726F]">{item.date}</span>
-          </div>
+      {hasViewMore && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={handleViewMore}
+            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-700 transition-colors duration-200"
+          >
+            View More
+          </button>
         </div>
-      </div>
-    </div>
+      )}
+      ;
+    </>
   );
 }
