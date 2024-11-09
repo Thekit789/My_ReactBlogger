@@ -16,22 +16,39 @@ export function ArticleSection() {
   const [category, setCategory] = useState("Highlight");
   const [isLoading, setIsLoading] = useState(true);
   const [blogPostData, setblogPostData] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 6;
+  const [hasViewMore, setHasViewMore] = useState(true);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (page, limit) => {
     try {
       const response = await axios.get(
-        `https://blog-post-project-api.vercel.app/posts`
+        `https://blog-post-project-api.vercel.app/posts?page=${page}&limit=${limit}`
       );
-      setblogPostData(response.data.posts);
+      if (page === 1) {
+        setblogPostData(response.data.posts);
+      } else {
+        setblogPostData((prevData) => [...prevData, ...response.data.posts]);
+      }
       setIsLoading(false);
+
+      if (response.data.currentPage >= response.data.totalPages) {
+        setHasViewMore(false);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(1, limit);
   }, []);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchPosts(page, limit);
+    }
+  }, [page]);
 
   const loading = () => {
     return (
@@ -46,6 +63,10 @@ export function ArticleSection() {
         </h1>
       </div>
     );
+  };
+
+  const handleViewMore = () => {
+    setPage((prevPage) => prevPage + 1);
   };
 
   return (
@@ -105,6 +126,10 @@ export function ArticleSection() {
       <></>
       <article className="md:grid-cols-2 md:gap-6 grid grid-cols-1 gap-12 pt-6 pb-20 bg-slate-50">
         {blogPostData.map((postData, id) => {
+          const formattedDate = new Date(postData.date).toLocaleDateString(
+            "en-GB",
+            { day: "2-digit", month: "long", year: "numeric" }
+          );
           return (
             <div className="flex flex-col gap-4" key={id}>
               <a href="#" className="relative h-[212px] sm:h-[360px]">
@@ -136,13 +161,24 @@ export function ArticleSection() {
                   />
                   <span>{postData.author}</span>
                   <span className="mx-2 text-gray-300">|</span>
-                  <span className="text-[#74726F]">{postData.date}</span>
+                  <span className="text-[#74726F]">{formattedDate}</span>
                 </div>
               </div>
             </div>
           );
         })}
       </article>
+      {hasViewMore && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={handleViewMore}
+            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-700 transition-colors duration-200"
+          >
+            View More
+          </button>
+        </div>
+      )}
+      ;
     </>
   );
 }
