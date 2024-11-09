@@ -35,12 +35,15 @@ export function ArticleSection() {
 
   const loading = () => {
     return (
-      <div className="w-max-full flex justify-center py-12">
+      <div className="w-max-full flex flex-col items-center justify-center py-12">
         <img
           className="md:size-24 size-10"
           src={loadingGif}
           alt="Description of the image"
-        />{" "}
+        />
+        <h1 className="md:text-2xl text-base text-[#504F4D] pt-2">
+          Loading...
+        </h1>
       </div>
     );
   };
