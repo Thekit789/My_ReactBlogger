@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
 import {
   Select,
@@ -128,24 +129,27 @@ export function ArticleSection() {
           );
           return (
             <div className="flex flex-col gap-4" key={id}>
-              <a href="#" className="relative h-[212px] sm:h-[360px]">
+              <Link
+                to={`/post/${postData.id}`}
+                className="relative h-[212px] sm:h-[360px]"
+              >
                 <img
                   className="w-full h-full object-cover rounded-xl"
                   src={postData.image}
                   alt={postData.title}
                 />
-              </a>
+              </Link>
               <div className="flex flex-col">
                 <div className="flex">
                   <span className="bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-green-600 mb-2">
                     {postData.category}
                   </span>
                 </div>
-                <a href="#" className="no-underline">
+                <Link to={`/post/${postData.id}`} className="no-underline">
                   <h2 className="text-start font-bold text-xl mb-2 line-clamp-2 hover:underline text-[#26231E]">
                     {postData.title}
                   </h2>
-                </a>
+                </Link>
                 <p className="text-muted-foreground text-sm mb-4 flex-grow line-clamp-3 text-[#74726F]">
                   {postData.description}
                 </p>
