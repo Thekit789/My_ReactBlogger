@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Markdown from "react-markdown";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import InteractionSection from "@/components/InteractionSection";
 
 export default function ViewPostPage() {
   const param = useParams();
@@ -80,6 +81,7 @@ export default function ViewPostPage() {
             <div className="pt-3 w-11/12 border-b-2 border-solid border-t-zinc-900"></div>
           </aside>
         </div>
+        <InteractionSection />
       </div>
     </section>
   );
